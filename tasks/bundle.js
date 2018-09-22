@@ -1,31 +1,44 @@
 const bundler = require('../lib/bundler.js');
-const babler  = require('../lib/babler.js');
+const transformer  = require('../lib/transformer.js');
 
 module.exports = function(grunt) {
 
     /**
      * Register the Grunt task tao-bundle
      */
-    grunt.registerMultiTask('bundle', 'Bundle client side code in TAO extensions', function() {
-        var options = this.options();
-        var done    = this.async();
+    grunt.registerMultiTask('bundle', 'Bundle client side code in TAO extensions', async function() {
 
-        const processTask = async () => {
+        const done    = this.async();
+        const options = this.options();
 
-            const results = await bundler(grunt, options);
-
-            grunt.log.write(results);
-
-            await babler(grunt, options);
-
+        const extendedConfig = {
+            ...options,
+            extensionPath   : options.getExtensionPath(options.extension),
+            extensionCssPath   : options.getExtensionCssPath(options.extension),
+            rootExtensionPath   : options.getExtensionPath(options.rootExtension)
         };
 
-        processTask()
-            .then( done )
-            .catch( err => {
-                grunt.log.error(err.message);
-                grunt.log.fail('Unable to bundle your code');
-            });
+        try {
+            const results = await bundler(grunt, extendedConfig);
+            grunt.verbose.write(results);
+
+        } catch(err){
+            console.error(err);
+            grunt.log.error(grunt.util.error(err.message, err));
+            grunt.fail.fatal('Unable to bundle your code');
+        }
+
+        try {
+            await transformer(grunt, options);
+        } catch(err){
+            grunt.log.error(err.message);
+            grunt.util.error(err.message, err);
+            grunt.fail.fatal('Unable transform your code');
+        }
+
+        done();
+
+
         // Placeholder task
         // merge everything into the destination
         // the options and the source files JSON
