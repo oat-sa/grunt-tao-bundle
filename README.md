@@ -14,7 +14,7 @@ The task is made of 2 steps :
 1. The bundling, based on the configuration, we aggregate the assets of the extension, into a single file. Since the TAO client source code is managed using AMD modules and use some [requirejs](https://requirejs.org) internals, we use the [r.js](https://requirejs.org/docs/optimization.html) optimizer to parse the dependency tree and bundle the assets. We don't use it to minimify the resources.
 2. The transform step is used to either transpile the code, using [Babel 7](https://babeljs.io/) (still experimental) or [UglifyJs](http://lisperator.net/uglifyjs/) to compress and minimify it.
 
-![tao bundler concept][./doc/tao-bundler.png]
+![tao bundler concept](./doc/tao-bundler.png?raw=true "TAO Bundler concept")
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ This plugin requires [node.js >= 8.6.0](https://nodejs.org/en/download/) and to 
 To add install it :
 
 ```shell
-npm install grunt-tao-bundle --save-dev
+npm install @oat-sa/grunt-tao-bundle --save-dev
 ```
 
 ## The "tao-bundle" task
