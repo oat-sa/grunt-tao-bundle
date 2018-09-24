@@ -55,6 +55,7 @@ grunt.initConfig({
 ## Options
 
 | Option | Type | Description | Scope | Example value |
+|--------|------|-------------|-------|---------------|
 | `amd`  |`Object` | The AMD/requirejs configuration |  All extensions, all bundles | |
 | `amd.baseUrl` | `String` | Relative path to resolve the AMD modules | All extensions, all bundles | `../js` |
 | `amd.paths` | `Object` | The list of AMD paths/alias | All extensions, all bundles | |
