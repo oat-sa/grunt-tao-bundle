@@ -32,13 +32,13 @@ module.exports = function(grunt) {
                 reporter: 'spec'
             },
             test: {
-                src: ['test/tao-bundle_spec.js']
+                src: ['test/amd-resolve_spec.js']
             }
         },
 
         watch : {
             test: {
-                files : ['tasks/*.js', 'test/*_spec.js'],
+                files : ['tasks/*.js', 'lib/*.js', 'test/*_spec.js'],
                 tasks:  ['test'],
                 options: {
                     debounceDelay: 2000
@@ -56,8 +56,8 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('test', 'Run tests', [
-        'clean:test',
-        'bundle:test',
+        //'clean:test',
+        //'bundle:test',
         'mochaTest:test'
     ]);
 

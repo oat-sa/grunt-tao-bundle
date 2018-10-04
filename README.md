@@ -69,7 +69,8 @@ grunt.initConfig({
 | `outputDir` | `String` | The directory (inside the workDir) where the bundles will be generated | The current extension | `loader` |
 | `extension` | `String` | The name of the current extension | The current extension | `taoQtiTest` |
 | `rootExtension` | `String` | The name of the root extension (the one with no prefix in AMD and that contains the libs and SDK) | All extensions | `tao` |
-| `dependencies` | `String[]` | The list of extension dependencies, the code from a dependency is excluded from the bundle. | The current extensions | `['taoItems', 'taoTests', 'taoQtiItem']` |
+| `dependencies` | `String[]` | The list of **extension** dependencies, the code from a dependency is excluded from the bundle. | The current extensions | `['taoItems', 'taoTests', 'taoQtiItem']` |
+| `allowExternal` | `String[]` | Allow external dependency into the bundle. It's not a good practice, but this can be used for aliases. Allow them to be included without the bundler to warn you about forbidden dependency. | The current extensions | `['qtiInfoControlContext']` |
 | `getExtensionPath` | `Function` | A function that resolves the path to the JS files from an extension | All extensions | `extension => root + '/' + extension + '/views/js' ` |
 | `getExtensionCssPath` | `Function` | A function that resolves the path to the CSS files from an extension | All extensions | `extension => root + '/' + extension + '/views/css' ` |
 | `bundles` | `Object[]` | The bundles configuration | The current extensions |  |
@@ -80,12 +81,13 @@ grunt.initConfig({
 | `bundle.default` | `Boolean` | When `true`, the bundle will include the modules from `amd.default` (Default : `false`) | The current bundle |  |
 | `bundle.include` | `String[]` | A list of additional module to add to the bundle, especially when modules are not in the correct folder. | The current bundle | `['taoQtiItem/qtiCommonRenderer/**/*']`  |
 | `bundle.exclude` | `String[]` | A list of additional module to exclude from the bundle. | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`  |
+| `bundle.dependencies` | `String[]` | Override the extension dependency loading : if set, loads the exact list of module| The current bundle | `['taoQtiItem/loader/taoQtiItemRunner.min']`  |
 | `bundle.babel` | `Boolean` | *Experimental* When `true`, the bundle will use Babel to transpile the code (Default : `false`) | The current bundle |  |
 | `bundle.uglify` | `Boolean` | When `true`, the bundle will be minimified (Default : `true`) | The current bundle |  |
 
 ### Examples
 
-The configuration from the `tao` extension : 
+The configuration from the `tao` extension :
 ```
 grunt.config.merge({
     bundle : {
@@ -125,7 +127,7 @@ grunt.config.merge({
 });
 ```
 
-The configuration from the `taoQtiItem` extension : 
+The configuration from the `taoQtiItem` extension :
 ```
 grunt.config.merge({
     bundle : {

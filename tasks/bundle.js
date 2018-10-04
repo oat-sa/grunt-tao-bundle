@@ -48,6 +48,7 @@ module.exports = function(grunt) {
          * @param {String} rootExtension - the name of the TAO root extension (the one that is not prefixed and contains the libs and the SDK)
          * @param {bundle[]} bundles - the configuration per bundle
          * @param {String[]} dependencies - the list of the dependencies (code from dependencies is excluded)
+         * @param {String[]} [allowExternal] - the list of modules allowed to be included, mostly for internal aliases
          */
 
         /**
@@ -58,8 +59,9 @@ module.exports = function(grunt) {
          * @param {Boolean} bundle.bootstrap - if true, the bundle will include the amd.bootstrap modules
          * @param {String} bundle.entryPoint - an optional name of the module entryPoint
          * @param {Boolean} bundle.default  - if true we include the modules from the amd.default (the defalt extension modules)
-         * @param {String[]} bundle.include - additional modules to include to the bundle
-         * @param {String[]} bundle.exclude - additional modules to exclude from the bundle
+         * @param {String[]} [bundle.include] - additional modules to include to the bundle
+         * @param {String[]} [bundle.exclude] - additional modules to exclude from the bundle
+         * @param {String[]} [bundle.dependencies] - overrides the dependencies to load for the bundle, USE THE FULL MODULE PATH
          * @param {Boolean} [bundle.babel = false] - Do we use the Babel transpiler
          * @param {Boolean} [bundle.uglify = true] - We minimify the bundle with uglify js (incompatible with the babel option)
          */
@@ -76,11 +78,16 @@ module.exports = function(grunt) {
         };
 
         try {
-            grunt.log.write('Start bundling');
+            grunt.log.subhead('Start bundling');
 
             const results = await bundler(extendedConfig);
-            grunt.log.write(results);
-            grunt.log.ok('bundling done');
+
+            results.forEach( bundle => {
+                grunt.log.ok(`${bundle.title} bundled with ${bundle.content.length} modules`);
+                grunt.log.debug( bundle.content );
+            });
+
+            grunt.log.writeln('Bundling done');
 
         } catch(err){
             grunt.log.error(grunt.util.error(err.message, err));
@@ -88,10 +95,12 @@ module.exports = function(grunt) {
         }
 
         try {
-            grunt.log.write('Start transform');
+
+            grunt.log.subhead('Start transform');
+
             const generated = await transformer(extendedConfig);
             generated.forEach( file => grunt.log.ok(`${file} transformed`));
-            grunt.log.ok('transform done');
+            grunt.log.writeln('Transform done');
 
         } catch(err){
             grunt.log.error(grunt.util.error(err.message, err));
