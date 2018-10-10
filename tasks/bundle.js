@@ -17,8 +17,10 @@
  *
  */
 
-const bundler = require('../lib/bundler.js');
-const transformer  = require('../lib/transformer.js');
+const bundler     = require('../lib/bundler.js');
+const transformer = require('../lib/transformer.js');
+const fs          = require('fs-extra');
+const prettyBytes = require('pretty-bytes');
 
 /**
  * Register the 'bundle' Grunt task
@@ -70,17 +72,11 @@ module.exports = function(grunt) {
          * @type {bundleOptions}
          */
         const options = this.options();
-        const extendedConfig = {
-            ...options,
-            extensionPath   : options.getExtensionPath(options.extension),
-            extensionCssPath   : options.getExtensionCssPath(options.extension),
-            rootExtensionPath   : options.getExtensionPath(options.rootExtension)
-        };
 
         try {
             grunt.log.subhead('Start bundling');
 
-            const results = await bundler(extendedConfig);
+            const results = await bundler(options);
 
             results.forEach( bundle => {
                 grunt.log.ok(`${bundle.title} bundled with ${bundle.content.length} modules`);
@@ -98,13 +94,27 @@ module.exports = function(grunt) {
 
             grunt.log.subhead('Start transform');
 
-            const generated = await transformer(extendedConfig);
-            generated.forEach( file => grunt.log.ok(`${file} transformed`));
+            const results = await transformer(options);
+            for(let transformResult of results){
+                const srcStat  = await fs.stat(transformResult.src);
+                const destStat = await fs.stat(transformResult.dest);
+
+                grunt.log.ok(`${transformResult.dest} transformed using ${transformResult.method} (${prettyBytes(srcStat.size)} →  ${prettyBytes(destStat.size)})`);
+                grunt.log.ok(`${transformResult.sourceMap} generated`);
+            }
             grunt.log.writeln('Transform done');
 
         } catch(err){
             grunt.log.error(grunt.util.error(err.message, err));
             grunt.fail.fatal('Unable transform your code');
+        }
+
+        //clean up workdir
+        try{
+            await fs.emptyDir(options.workDir || 'output');
+        } catch(err){
+            grunt.log.error(grunt.util.error(err.message, err));
+            grunt.fail.warn(`Unable clean up the working directory ${options.workDir}`);
         }
 
         done();

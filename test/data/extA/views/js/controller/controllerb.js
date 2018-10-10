@@ -1,1 +1,1 @@
-define([], function() { return 'controllerb'; });
+define(['core/util/util'], function() { return 'controllerb'; });

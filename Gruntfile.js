@@ -9,22 +9,11 @@ module.exports = function(grunt) {
             ]
         },
 
-        'bundle': {
-            test: {
-                options: {
-                    foo : true
-                },
-                files: {
-                    'test/data/out/dest.json' : ['test/data/*.json']
-                }
-            }
-        },
-
         clean : {
             options: {
                 force : true
             },
-            test: ['test/data/out/*']
+            test: ['output/*']
         },
 
         mochaTest: {
@@ -32,7 +21,7 @@ module.exports = function(grunt) {
                 reporter: 'spec'
             },
             test: {
-                src: ['test/amd-resolve_spec.js']
+                src: ['test/*_spec.js']
             }
         },
 
@@ -48,19 +37,11 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-mocha-test');
 
-    grunt.loadTasks('tasks');
-
-
-    grunt.registerTask('test', 'Run tests', [
-        //'clean:test',
-        //'bundle:test',
-        'mochaTest:test'
-    ]);
-
+    grunt.registerTask('test', 'Run tests', ['mochaTest:test', 'clean:test']);
     grunt.registerTask('devtest', ['watch:test']);
 };
 

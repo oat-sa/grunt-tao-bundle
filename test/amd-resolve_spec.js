@@ -64,7 +64,7 @@ describe('amd-resolve', () => {
         ]);
     });
 
-    it('should resolve other file type modules', async () => {
+    it('should resolve css modules', async () => {
 
         const results = await amdResolve( '**/*', {
             targetExtension : 'extC',
@@ -74,6 +74,19 @@ describe('amd-resolve', () => {
 
         expect(results).to.deep.equal([
             'css!extC/component/compa'
+        ]);
+    });
+
+    it('should resolve tpl modules', async () => {
+
+        const results = await amdResolve( '**/*', {
+            targetExtension : 'extC',
+            cwd : extensionCPath,
+            type : 'tpl'
+        });
+
+        expect(results).to.deep.equal([
+            'tpl!extC/component/compa'
         ]);
     });
 

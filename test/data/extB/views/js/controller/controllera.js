@@ -1,3 +1,3 @@
-define(['extB/compa'], function(compa){
+define(['extB/component/compa'], function(compa){
     return ['extB/controllera', compa];
 });
