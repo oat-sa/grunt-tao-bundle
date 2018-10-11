@@ -1,13 +1,36 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2018 (original work) Open Assessment Technlogies SA
+ *
+ */
 const describe = require('mocha').describe;
 const it       = require('mocha').it;
 const expect   = require('chai').expect;
-
 const path     = require('path');
+
 const dataDir  = path.resolve(__dirname, 'data');
 const extensionAPath = path.join(dataDir, 'extA/views/js');
 const extensionBPath = path.join(dataDir, 'extB/views/js');
 const extensionCPath = path.join(dataDir, 'extC/views/js');
 
+/**
+ * Test the module lib/amdResolve
+ *
+ * @author Bertrand Chevrier <bertrand@taotesting.com>
+ */
 describe('amd-resolve', () => {
 
     const amdResolve = require('../lib/amdResolve.js');

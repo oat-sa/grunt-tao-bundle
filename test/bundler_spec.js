@@ -1,15 +1,48 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2018 (original work) Open Assessment Technlogies SA
+ *
+ */
 const describe = require('mocha').describe;
 const it       = require('mocha').it;
 const expect   = require('chai').expect;
-
 const path     = require('path');
-const dataDir  = path.resolve(__dirname, 'data');
 
+/**
+ * Test the module lib/bundler
+ *
+ * @author Bertrand Chevrier <bertrand@taotesting.com>
+ */
 describe('bundler', () => {
 
     const bundler = require('../lib/bundler.js');
-
-    //it('should expose a function', () => expect(bundler).to.be.a('function'));
+    const dataDir  = path.resolve(__dirname, 'data');
+    const options = {
+        amd : {
+            baseUrl: path.join(dataDir, 'extA/views/js'),
+            shim: {},
+            default : ['controller/**/*'],
+            vendor  : ['lib/**/*'],
+            bootstrap: ['loader/bootstrap']
+        },
+        rootExtension: 'extA',
+        workdir : 'output',
+        getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
+        getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+    };
 
     it('should return a promise', () => {
         expect(bundler()).to.be.an.instanceof(Promise);
@@ -18,19 +51,12 @@ describe('bundler', () => {
     it('should create a default bundle', async () => {
 
         const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                default : ['controller/**/*']
-            },
-            rootExtension: 'extA',
+            ...options,
             extension : 'extA',
             bundles : [{
                 name : 'extA',
                 default: true
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -45,24 +71,16 @@ describe('bundler', () => {
 
     it('should create a multiple bundles', async () => {
 
-        const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                default : ['controller/**/*'],
-                vendor  : ['lib/**/*']
-            },
+        const results = await bundler({
+            ...options,
             extension : 'extA',
-            rootExtension: 'extA',
             bundles : [{
                 name : 'vendor',
                 vendor : true
             }, {
                 name : 'extA',
                 default : true
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -83,20 +101,13 @@ describe('bundler', () => {
 
     it('should create a bundle without the dependencies', async () => {
 
-        const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                default : ['controller/**/*']
-            },
+        const results = await bundler({
+            ...options,
             extension : 'extB',
-            rootExtension : 'extA',
             bundles : [{
                 name : 'extB',
                 default: true
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -111,20 +122,13 @@ describe('bundler', () => {
     it('should create a bundle and exlcude some dependencies', async () => {
 
         const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                default : ['controller/**/*', 'component/**/*']
-            },
+            ...options,
             extension : 'extB',
-            rootExtension : 'extA',
             bundles : [{
                 name : 'extB',
                 default: true,
                 exclude: ['extB/component/compa']
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -138,20 +142,13 @@ describe('bundler', () => {
     it('should create a bundle and exlcude extension dependencies', async () => {
 
         const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                default : ['controller/**/*']
-            },
+            ...options,
             extension : 'extC',
-            rootExtension : 'extA',
             dependencies: ['extB'],
             bundles : [{
                 name : 'extC',
                 default: true
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -165,21 +162,14 @@ describe('bundler', () => {
 
     it('should create a bootstrap bundle from an entrypoint', async () => {
 
-        const results = await bundler( {
-            amd : {
-                baseUrl: path.join(dataDir, 'extA/views/js'),
-                shim: {},
-                bootstrap: ['loader/bootstrap']
-            },
+        const results = await bundler({
+            ...options,
             extension : 'extA',
-            rootExtension : 'extA',
             bundles : [{
                 name : 'login',
                 bootstrap : true,
                 entryPoint: 'controller/controllerb'
-            }],
-            getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
-            getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
+            }]
         });
 
         expect(results).to.be.an('array');
@@ -191,4 +181,5 @@ describe('bundler', () => {
             'controller/controllerb.js'
         ]);
     });
+
 });

@@ -26,7 +26,6 @@ const prettyBytes = require('pretty-bytes');
  * Register the 'bundle' Grunt task
  *
  * @author Bertrand Chevrier <bertrand@taotesting.com>
- *
  */
 module.exports = function(grunt) {
 

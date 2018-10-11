@@ -11,17 +11,18 @@
   "main": "Gruntfile.js",
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.5.3",
     "grunt": "^1.0.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^18.0.0",
-    "grunt-mocha-test": "^0.12.7"
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.5.3",
+    "mock-require": "^3.0.2"
   },
   "scripts": {
     "lint": "grunt eslint",
     "test": "grunt test",
-    "devtest": "grunt devtest"
+    "dev:test": "grunt devtest"
   },
   "engine": {
     "node": ">=8.6.0"
