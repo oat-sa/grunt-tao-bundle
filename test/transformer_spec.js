@@ -50,7 +50,10 @@ describe('transformer', () => {
             pathExists(){
                 return Promise.resolve(true);
             },
-            readFile(){
+            readFile(path){
+                if(/\.map$/.test(path)){
+                    return Promise.resolve('{"version":3,"sources":[]}');
+                }
                 return Promise.resolve('controller/controllerb');
             }
         });
