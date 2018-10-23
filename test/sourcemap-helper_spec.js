@@ -45,4 +45,12 @@ describe('sourceMapHelper fixModuleCreate', () => {
         expect(fixModuleCreate(input)).to.equal(output);
     });
 
+    it('should fix the on layer end path', async () => {
+
+        const input = '{"version":3,"sources":["../controller/routes.js","../../../../../../../../../../onLayerEnd0.js","foo"],"names":["define"],"mappings":"AAqBAA,OAAA,iCAAA,GAAA,WACA,aAEA,MAAA,KCvBAA,OAAA,0CAAA","file":"taoTestTaker.min.js","sourceRoot":"/"}';
+        const output = '{"version":3,"sources":["../controller/routes.js","onLayerEnd0.js","foo"],"names":["define"],"mappings":"AAqBAA,OAAA,iCAAA,GAAA,WACA,aAEA,MAAA,KCvBAA,OAAA,0CAAA","file":"taoTestTaker.min.js","sourceRoot":"/"}';
+
+        expect(fixModuleCreate(input)).to.equal(output);
+    });
+
 });
