@@ -113,6 +113,26 @@ describe('amd-resolve', () => {
         ]);
     });
 
+    it('should resolve a pattern with an complex aliases', async () => {
+
+        const results = await amdResolve( 'foo/aliasButton/**/*', {
+            targetExtension : 'extA',
+            cwd : extensionAPath,
+            extensionPrefix : false,
+            aliases : {
+                'foo/alias' : 'lib',
+                'foo/aliasButton' : 'core'
+            }
+        });
+
+        expect(results).to.deep.equal([
+            'foo/aliasButton/corea',
+            'foo/aliasButton/coreb',
+            'foo/aliasButton/corec',
+            'foo/aliasButton/util/util'
+        ]);
+    });
+
     it('should resolve a pattern with an aliases that resolve elsewhere', async () => {
 
         const results = await amdResolve( 'core/**/*', {
