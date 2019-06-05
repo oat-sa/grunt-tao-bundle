@@ -73,6 +73,83 @@ describe('amd-resolve', () => {
         ]);
     });
 
+    it('should resolve a pattern with an alias', async () => {
+
+        const results = await amdResolve( 'alias/**/*', {
+            targetExtension : 'extA',
+            cwd : extensionAPath,
+            extensionPrefix : false,
+            aliases : {
+                foo : 'bar',
+                alias : 'core'
+            }
+        });
+
+        expect(results).to.deep.equal([
+            'alias/corea',
+            'alias/coreb',
+            'alias/corec',
+            'alias/util/util'
+        ]);
+    });
+
+    it('should resolve a pattern with an complex aliases', async () => {
+
+        const results = await amdResolve( 'foo/alias/**/*', {
+            targetExtension : 'extA',
+            cwd : extensionAPath,
+            extensionPrefix : false,
+            aliases : {
+                'foo/alias' : 'core',
+                ootch : 'lib'
+            }
+        });
+
+        expect(results).to.deep.equal([
+            'foo/alias/corea',
+            'foo/alias/coreb',
+            'foo/alias/corec',
+            'foo/alias/util/util'
+        ]);
+    });
+
+    it('should resolve a pattern with an complex aliases', async () => {
+
+        const results = await amdResolve( 'foo/aliasButton/**/*', {
+            targetExtension : 'extA',
+            cwd : extensionAPath,
+            extensionPrefix : false,
+            aliases : {
+                'foo/alias' : 'lib',
+                'foo/aliasButton' : 'core'
+            }
+        });
+
+        expect(results).to.deep.equal([
+            'foo/aliasButton/corea',
+            'foo/aliasButton/coreb',
+            'foo/aliasButton/corec',
+            'foo/aliasButton/util/util'
+        ]);
+    });
+
+    it('should resolve a pattern with an aliases that resolve elsewhere', async () => {
+
+        const results = await amdResolve( 'core/**/*', {
+            targetExtension : 'extA',
+            cwd : extensionAPath,
+            extensionPrefix : false,
+            aliases : {
+                'core' : '../../../extC/views/js',
+            }
+        });
+
+        expect(results).to.deep.equal([
+            'core/component/compa',
+            'core/controller/controllera'
+        ]);
+    });
+
     it('should not include excluded modules', async () => {
 
         const results = await amdResolve( '**/*', {
