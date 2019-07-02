@@ -58,6 +58,7 @@ describe('bundler', () => {
                 default: true
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
@@ -82,6 +83,7 @@ describe('bundler', () => {
                 default : true
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(2);
@@ -109,6 +111,7 @@ describe('bundler', () => {
                 default: true
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
@@ -130,6 +133,7 @@ describe('bundler', () => {
                 exclude: ['extB/component/compa']
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
@@ -150,6 +154,7 @@ describe('bundler', () => {
                 default: true
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
@@ -171,6 +176,7 @@ describe('bundler', () => {
                 entryPoint: 'controller/controllerb'
             }]
         });
+        console.log(results);
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
@@ -181,5 +187,52 @@ describe('bundler', () => {
             'controller/controllerb.js'
         ]);
     });
+
+    // it('should create a bundle with vendorised paths', async () => {
+
+    //     const results = await bundler({
+    //         ...options,
+    //         extension : 'extB',
+    //         paths: require(path.join(dataDir, 'extB/views/build/grunt/paths.json')),
+    //         bundles : [{
+    //             name : 'extB',
+    //             entryPoint: 'extB/some-fake-file'
+    //         }]
+    //     });
+    //     console.log(results);
+
+    //     expect(results).to.be.an('array');
+    //     expect(results.length).to.be.equal(1);
+    //     expect(results[0].title).to.be.equal('extB/loader/extB.bundle.js');
+    //     expect(results[0].content).to.be.deep.equal([
+    //         'extB/some-fake-file.js'
+    //     ]);
+    // });
+
+    // it('should create a bundle with a dependency with vendorised paths', async () => {
+
+    //     const results = await bundler({
+    //         ...options,
+    //         extension : 'extC',
+    //         dependencies: ['extB'],
+    //         bundles : [{
+    //             name : 'extC',
+    //             include: [
+    //                 'extC/component/compa',
+    //                 'extB/some-fake-file'
+    //             ]
+    //         }]
+    //     });
+    //     console.log(results);
+
+    //     expect(results).to.be.an('array');
+    //     expect(results.length).to.be.equal(1);
+    //     expect(results[0].title).to.be.equal('extC/loader/extC.bundle.js');
+    //     expect(results[0].content).to.be.deep.equal([
+    //         'extC/component/compa.js',
+    //         'extC/controller/controllera.js',
+    //         // 'extB/some-fake-file.js'
+    //     ]);
+    // });
 
 });

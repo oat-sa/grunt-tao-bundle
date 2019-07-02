@@ -1,0 +1,3 @@
+{
+    "extB/some-fake-file": "../../../extB/views/node_modules/@oat-sa/some-fake-library/dist/some-fake-file"
+}
