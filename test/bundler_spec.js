@@ -40,7 +40,7 @@ describe('bundler', () => {
         },
         rootExtension: 'extA',
         workdir : path.join(dataDir, 'output'),
-        rootPath: path.resolve(__dirname, 'data'),
+        rootPath: dataDir,
         getExtensionPath :    extension => path.join(dataDir, extension, 'views/js'),
         getExtensionCssPath : extension => path.join(dataDir, extension, 'views/css')
     };
