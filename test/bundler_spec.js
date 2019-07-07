@@ -191,7 +191,7 @@ describe('bundler', () => {
             paths: require(path.join(dataDir, 'extB/views/build/grunt/paths.json')),
             bundles : [{
                 name : 'extB',
-                entryPoint: 'extB/some-fake-file'
+                entryPoint: 'extB/some-fake-lib/some-fake-file'
             }]
         });
 
@@ -199,31 +199,71 @@ describe('bundler', () => {
         expect(results.length).to.be.equal(1);
         expect(results[0].title).to.be.equal('extB/loader/extB.bundle.js');
         expect(results[0].content).to.be.deep.equal([
-            'extB/some-fake-file.js'
+            'extB/some-fake-lib/some-fake-file.js'
         ]);
     });
 
-    it('should create a bundle with a dependency with vendorised paths', async () => {
+    it('should create a bundle and automatically exclude vendorised dependencies', async () => {
 
         const results = await bundler({
             ...options,
-            extension : 'extC',
+            extension : 'extD',
             dependencies: ['extB'],
             bundles : [{
-                name : 'extC',
+                name : 'extD',
                 include: [
-                    'extC/component/compa',
-                    'extB/some-fake-file'
+                    'extD/compb'
                 ]
             }]
         });
 
         expect(results).to.be.an('array');
         expect(results.length).to.be.equal(1);
-        expect(results[0].title).to.be.equal('extC/loader/extC.bundle.js');
+        expect(results[0].title).to.be.equal('extD/loader/extD.bundle.js');
         expect(results[0].content).to.be.deep.equal([
-            'extC/component/compa.js',
-            'extB/some-fake-file.js'
+            'extD/compb.js'
+        ]);
+    });
+
+    it('should throw when forbidden libraries are included in bundle', async () => {
+        try {
+            const results = await bundler({
+                ...options,
+                extension : 'extD',
+                allowExternal: [],
+                bundles : [{
+                    name : 'extD',
+                    include: [
+                        'extA/lib/libc'
+                    ]
+                }]
+            });
+            expect(false, 'Bundler should have thrown already!').to.be.true;
+        }
+        catch (e) {
+            expect(e).to.be.an.instanceof(Error);
+            expect(e.message).to.be.equal('The bundle extD/loader/extD.bundle.js contains a forbidden dependency "extA/lib/libc". Check your configuration!');
+        }
+    });
+
+    it('should not throw when allowed libraries are included in bundle', async () => {
+        const results = await bundler({
+            ...options,
+            extension : 'extD',
+            allowExternal: ['extA/lib/libc'],
+            bundles : [{
+                name : 'extD',
+                include: [
+                    'extA/lib/libc'
+                ]
+            }]
+        });
+
+        expect(results).to.be.an('array');
+        expect(results.length).to.be.equal(1);
+        expect(results[0].title).to.be.equal('extD/loader/extD.bundle.js');
+        expect(results[0].content).to.be.deep.equal([
+            'extA/lib/libc.js'
         ]);
     });
 
