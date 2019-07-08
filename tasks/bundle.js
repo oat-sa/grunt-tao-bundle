@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2018 (original work) Open Assessment Technlogies SA
+ * Copyright (c) 2018-2019 (original work) Open Assessment Technlogies SA
  *
  */
 
@@ -45,6 +45,7 @@ module.exports = function(grunt) {
          * @param {Object} [paths] - additional list of AMD paths/alias for the given bundles (added to amd.paths)
          * @param {String} workDir - the temporary working directory to copy the sources and generates the bundles
          * @param {String} outputDir - the directory (inside the workDir) where the bundles will be generated
+         * @param {String} [rootPath] - the path from where the bundle task is run, back to the TAO instance root
          * @param {String} extension - the name of the TAO extension the bundles belong to
          * @param {String} rootExtension - the name of the TAO root extension (the one that is not prefixed and contains the libs and the SDK)
          * @param {bundle[]} bundles - the configuration per bundle
