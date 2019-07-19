@@ -1,6 +1,6 @@
 {
   "name": "@oat-sa/grunt-tao-bundle",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Bundle client side code in TAO extensions",
   "author": "Bertrand Chevrier <bertrand@taotesting.com>",
   "keywords": [
@@ -26,22 +26,22 @@
   },
   "homepage": "https://github.com/oat-sa/grunt-tao-bundle#readme",
   "dependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@oat-sa/browserslist-config-tao": "^0.1.0",
     "babel-preset-minify": "^0.5.0",
-    "fs-extra": "^8.0.1",
+    "fs-extra": "^8.1.0",
     "glob": "^7.1.4",
     "pretty-bytes": "^5.2.0",
     "requirejs": "^2.3.6",
-    "uglify-js": "^3.5.15"
+    "uglify-js": "^3.6.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "grunt": "^1.0.4",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-eslint": "^21.0.0",
+    "grunt-eslint": "^22.0.0",
     "grunt-mocha-test": "^0.13.0",
     "mocha": "^6.1.4",
     "mock-require": "^3.0.3"
