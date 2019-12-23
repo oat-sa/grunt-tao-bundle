@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'er'
+        label 'builder'
     }
     stages {
         stage('Frontend Tests') {
