@@ -174,9 +174,10 @@ npm test
 
 ## Release History
 
- * _0.3.2_ fix paths for the embedded source-maps
- * _0.2.0_ babel implementation
- * _0.1.0_ initial release
+ * _0.4.0_ Add Jenkins file
+ * _0.3.2_ Fix paths for the embedded source-maps
+ * _0.2.0_ Babel implementation
+ * _0.1.0_ Initial release
 
 ## License
 
