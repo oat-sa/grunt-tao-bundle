@@ -174,6 +174,7 @@ npm test
 
 ## Release History
 
+ * _0.3.2_ fix paths for the embedded source-maps
  * _0.2.0_ babel implementation
  * _0.1.0_ initial release
 
