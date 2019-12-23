@@ -1,0 +1,4 @@
+{
+    "alias/one": "../path/alias/one",
+    "alias/two": "../path/alias/two"
+}
