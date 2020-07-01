@@ -1,4 +1,4 @@
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2018 (original work) Open Assessment Technlogies SA
+ * Copyright (c) 2018-2020 (original work) Open Assessment Technologies SA
  *
  */
 const describe = require('mocha').describe;
@@ -267,4 +267,33 @@ describe('bundler', () => {
         ]);
     });
 
+    it('should bundle with provided packages', async () => {
+        const results = await bundler({
+            ...options,
+            extension: 'extF',
+            packages: [
+                {
+                    name: 'packages',
+                    location: 'test/data/packages/',
+                    main: 'main.js'
+                }
+            ],
+            bundles: [
+                {
+                    name: 'extF',
+                    default: true
+                }
+            ]
+        });
+
+        expect(results).to.be.an('array');
+        expect(results.length).to.be.equal(1);
+        expect(results[0].title).to.be.equal('extF/loader/extF.bundle.js');
+
+        expect(results[0].content).to.be.deep.equal([
+            path.resolve('./test/data/packages/main.js'),
+            path.resolve('./test/data/packages/plugins/hint.js'),
+            'extF/controller/a.js'
+        ]);
+    });
 });
