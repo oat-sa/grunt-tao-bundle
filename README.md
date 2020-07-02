@@ -84,6 +84,7 @@ grunt.initConfig({
 | `bundle.dependencies` | `String[]` | Override the extension dependency loading : if set, loads the exact list of module| The current bundle | `['taoQtiItem/loader/taoQtiItemRunner.min']`  |
 | `bundle.babel` | `Boolean` | *Experimental* When `true`, the bundle will use Babel to transpile the code (Default : `false`) | The current bundle |  |
 | `bundle.uglify` | `Boolean` | When `true`, the bundle will be minimified (Default : `true`) | The current bundle |  |
+| `bundle.package` | `Object[]` | Extends [packages](https://requirejs.org/docs/api.html#packages) to the bundle (Default : `[]`) | The current bundle | `[{ name: 'codemirror', location: '../../../tao/views/node_modules/codemirror', main: 'lib/codemirror'}]`
 
 ### Examples
 
@@ -173,7 +174,7 @@ npm test
 ```
 
 ## Release History
-
+ * _0.5.0_ Extend optimizer with packages option
  * _0.4.1_ Fix paths for the embedded source-maps
  * _0.4.0_ Add Jenkins file
  * _0.2.0_ Babel implementation
