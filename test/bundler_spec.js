@@ -298,14 +298,6 @@ describe('bundler', () => {
     });
 
     it('should exclude nested modules and packages from bundle', async () => {
-        /**
-         * Dependencies:
-         * 
-         * 'ctrl/router' -> ['ctrl/a', 'ctrl/b']
-         * 'ctrl/a' -> 'component/a' -> 'package'
-         * 'ctrl/b' 
-         */
-
         const results = await bundler({
             ...options,
             extension: 'extG',
