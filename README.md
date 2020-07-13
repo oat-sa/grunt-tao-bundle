@@ -81,7 +81,7 @@ grunt.initConfig({
 | `bundle.default` | `Boolean` | When `true`, the bundle will include the modules from `amd.default` (Default : `false`) | The current bundle |  |
 | `bundle.include` | `String[]` | A list of additional module to add to the bundle, especially when modules are not in the correct folder. | The current bundle | `['taoQtiItem/qtiCommonRenderer/**/*']`  |
 | `bundle.exclude` | `String[]` | A list of additional module to exclude from the bundle, but if module has nested dependencies that are part of the built file | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`  |
-| `bundle.excludeNested` | `String[]` | A list of module to exclude from the bundle | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`  |
+| `bundle.excludeNested` | `String[]` | A list of module to exclude from the bundle. Excludes all nested dependencies from the built file | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`  |
 | `bundle.dependencies` | `String[]` | Override the extension dependency loading : if set, loads the exact list of module| The current bundle | `['taoQtiItem/loader/taoQtiItemRunner.min']`  |
 | `bundle.babel` | `Boolean` | *Experimental* When `true`, the bundle will use Babel to transpile the code (Default : `false`) | The current bundle |  |
 | `bundle.uglify` | `Boolean` | When `true`, the bundle will be minimified (Default : `true`) | The current bundle |  |
