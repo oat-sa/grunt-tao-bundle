@@ -296,4 +296,84 @@ describe('bundler', () => {
             'extF/controller/a.js'
         ]);
     });
+
+    it('should exclude nested modules and packages from bundle', async () => {
+        const results = await bundler({
+            ...options,
+            extension: 'extG',
+            packages: [
+                {
+                    name: 'packages',
+                    location: 'test/data/packages/',
+                    main: 'main.js'
+                }
+            ],
+            bundles: [
+                {
+                    name: 'extension',
+                    default: true,
+                },
+                {
+                    name: 'extensionExcludeNested',
+                    default: true,
+                    babel: true,
+                    excludeNested: ['extG/controller/a']
+                },
+                {
+                    name: 'extensionExcludeShallow',
+                    default: true,
+                    babel: true,
+                    exclude: ['extG/controller/a']
+                },
+                {
+                    name: 'controllerA',
+                    entryPoint: 'extG/controller/a',
+                    babel: true
+                },
+                {
+                    name: 'controllerAExcludeNested',
+                    entryPoint: 'extG/controller/a',
+                    excludeNested: ['extG/component/a']
+                },
+            ]
+        });
+
+        expect(results).to.be.an('array');
+        expect(results.length).to.be.equal(5);
+        expect(results[0].title).to.be.equal('extG/loader/extension.bundle.js');
+        expect(results[1].title).to.be.equal('extG/loader/extensionExcludeNested.bundle.js');
+        expect(results[2].title).to.be.equal('extG/loader/extensionExcludeShallow.bundle.js');
+        expect(results[3].title).to.be.equal('extG/loader/controllerA.bundle.js');
+        expect(results[4].title).to.be.equal('extG/loader/controllerAExcludeNested.bundle.js');
+        
+        expect(results[0].content).to.be.deep.equal([
+            path.resolve('./test/data/packages/main.js'),
+            'extG/component/a.js',
+            'extG/controller/a.js',
+            'extG/controller/b.js',
+            'extG/controller/routes.js'
+        ], 'Bundle extension must include all modules and packages');
+
+        expect(results[1].content).to.be.deep.equal([
+            'extG/controller/b.js',
+            'extG/controller/routes.js'
+        ], 'Bundle extensionExcludeNested must exclude all modules and packages');
+
+        expect(results[2].content).to.be.deep.equal([
+            path.resolve('./test/data/packages/main.js'),
+            'extG/component/a.js',
+            'extG/controller/b.js',
+            'extG/controller/routes.js',
+        ], 'Bundle extensionExcludeShallow must exclude extG/controller/a but must contains controller\'s nested dependencies');
+
+        expect(results[3].content).to.be.deep.equal([
+            path.resolve('./test/data/packages/main.js'),
+            'extG/component/a.js',
+            'extG/controller/a.js',
+        ], 'Bundle for controller A must include all nested dependencies');
+
+        expect(results[4].content).to.be.deep.equal([
+            'extG/controller/a.js',
+        ], 'Bundle for controller A must exclude all nested dependencies');
+    });
 });
