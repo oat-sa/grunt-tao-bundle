@@ -40,15 +40,22 @@
   },
   "devDependencies": {
     "@oat-sa/browserslist-config-tao": "^1.0.1",
+    "@oat-sa/eslint-config-tao": "^1.1.1",
+    "@oat-sa/prettier-config": "^0.1.1",
     "chai": "^4.2.0",
+    "eslint": "^8.26.0",
+    "eslint-plugin-es": "^4.1.0",
+    "eslint-plugin-jsdoc": "^39.5.0",
     "grunt": "^1.0.4",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^22.0.0",
     "grunt-mocha-test": "^0.13.0",
     "mocha": "^6.1.4",
-    "mock-require": "^3.0.3"
+    "mock-require": "^3.0.3",
+    "prettier": "^2.7.1"
   },
+  "prettier": "@oat-sa/prettier-config",
   "browserslist": [
     "extends @oat-sa/browserslist-config-tao"
   ]
