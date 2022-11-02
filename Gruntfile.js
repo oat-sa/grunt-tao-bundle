@@ -1,17 +1,12 @@
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
     grunt.initConfig({
-
         eslint: {
-            all: [
-                'Gruntfile.js',
-                'tasks/*.js'
-            ]
+            all: ['Gruntfile.js', 'tasks/*.js']
         },
 
-        clean : {
+        clean: {
             options: {
-                force : true
+                force: true
             },
             test: ['output/*']
         },
@@ -25,10 +20,10 @@ module.exports = function(grunt) {
             }
         },
 
-        watch : {
+        watch: {
             test: {
-                files : ['tasks/*.js', 'lib/*.js', 'test/*_spec.js'],
-                tasks:  ['test'],
+                files: ['tasks/*.js', 'lib/*.js', 'test/*_spec.js'],
+                tasks: ['test'],
                 options: {
                     debounceDelay: 2000
                 }
@@ -44,4 +39,3 @@ module.exports = function(grunt) {
     grunt.registerTask('test', 'Run tests', ['mochaTest:test', 'clean:test']);
     grunt.registerTask('devtest', ['watch:test']);
 };
-
