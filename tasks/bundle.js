@@ -63,6 +63,7 @@ module.exports = function (grunt) {
          * @param {String[]} [bundle.exclude] - additional modules to exclude from the bundle
          * @param {String[]} [bundle.dependencies] - overrides the dependencies to load for the bundle, USE THE FULL MODULE PATH
          * @param {Boolean} [bundle.babel = false] - Do we use the Babel transpiler
+         * @param {Object} [bundle.targets] - An object can be given for listing the Babel's targets
          * @param {Boolean} [bundle.uglify = true] - We minimify the bundle with uglify js (incompatible with the babel option)
          */
 
