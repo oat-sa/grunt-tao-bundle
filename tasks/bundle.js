@@ -57,6 +57,7 @@ module.exports = function (grunt) {
          * @param {String} bundle.name - the name with no extension, ie 'vendor'
          * @param {Boolean} bundle.vendor - if true, the bundle will include ONLY the amd.vendor libraries
          * @param {Boolean} bundle.bootstrap - if true, the bundle will include the amd.bootstrap modules
+         * @param {Boolean} bundle.standalone - if true, the bundle can be used as a standalone, all dependencies being bundled inside
          * @param {String} bundle.entryPoint - an optional name of the module entryPoint
          * @param {Boolean} bundle.default  - if true we include the modules from the amd.default (the defalt extension modules)
          * @param {String[]} [bundle.include] - additional modules to include to the bundle
