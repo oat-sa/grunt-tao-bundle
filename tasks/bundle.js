@@ -17,9 +17,9 @@
  *
  */
 
-const bundler     = require('../lib/bundler.js');
+const bundler = require('../lib/bundler.js');
 const transformer = require('../lib/transformer.js');
-const fs          = require('fs-extra');
+const fs = require('fs-extra');
 const prettyBytes = require('pretty-bytes');
 
 /**
@@ -27,14 +27,12 @@ const prettyBytes = require('pretty-bytes');
  *
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
     /**
      * Register the Grunt task tao-bundle
      */
-    grunt.registerMultiTask('bundle', 'Bundle client side code in TAO extensions', async function() {
-
-        const done    = this.async();
+    grunt.registerMultiTask('bundle', 'Bundle client side code in TAO extensions', async function () {
+        const done = this.async();
 
         /**
          * @typedef {Object} bundleOptions
@@ -59,12 +57,14 @@ module.exports = function(grunt) {
          * @param {String} bundle.name - the name with no extension, ie 'vendor'
          * @param {Boolean} bundle.vendor - if true, the bundle will include ONLY the amd.vendor libraries
          * @param {Boolean} bundle.bootstrap - if true, the bundle will include the amd.bootstrap modules
+         * @param {Boolean} bundle.standalone - if true, the bundle can be used as a standalone, all dependencies being bundled inside
          * @param {String} bundle.entryPoint - an optional name of the module entryPoint
          * @param {Boolean} bundle.default  - if true we include the modules from the amd.default (the defalt extension modules)
          * @param {String[]} [bundle.include] - additional modules to include to the bundle
          * @param {String[]} [bundle.exclude] - additional modules to exclude from the bundle
          * @param {String[]} [bundle.dependencies] - overrides the dependencies to load for the bundle, USE THE FULL MODULE PATH
          * @param {Boolean} [bundle.babel = false] - Do we use the Babel transpiler
+         * @param {Object} [bundle.targets] - An object can be given for listing the Babel's targets
          * @param {Boolean} [bundle.uglify = true] - We minimify the bundle with uglify js (incompatible with the babel option)
          */
 
@@ -78,41 +78,42 @@ module.exports = function(grunt) {
 
             const results = await bundler(options);
 
-            results.forEach( bundle => {
+            results.forEach(bundle => {
                 grunt.log.ok(`${bundle.title} bundled with ${bundle.content.length} modules`);
-                grunt.log.debug( bundle.content );
+                grunt.log.debug(bundle.content);
             });
 
             grunt.log.writeln('Bundling done');
-
-        } catch(err){
+        } catch (err) {
             grunt.log.error(grunt.util.error(err.message, err));
             grunt.fail.fatal('Unable to bundle your code');
         }
 
         try {
-
             grunt.log.subhead('Start transform');
 
             const results = await transformer(options);
-            for(let transformResult of results){
-                const srcStat  = await fs.stat(transformResult.src);
+            for (let transformResult of results) {
+                const srcStat = await fs.stat(transformResult.src);
                 const destStat = await fs.stat(transformResult.dest);
 
-                grunt.log.ok(`${transformResult.dest} transformed using ${transformResult.method} (${prettyBytes(srcStat.size)} →  ${prettyBytes(destStat.size)})`);
+                grunt.log.ok(
+                    `${transformResult.dest} transformed using ${transformResult.method} (${prettyBytes(
+                        srcStat.size
+                    )} →  ${prettyBytes(destStat.size)})`
+                );
                 grunt.log.ok(`${transformResult.sourceMap} generated`);
             }
             grunt.log.writeln('Transform done');
-
-        } catch(err){
+        } catch (err) {
             grunt.log.error(grunt.util.error(err.message, err));
             grunt.fail.fatal('Unable transform your code');
         }
 
         //clean up workdir
-        try{
+        try {
             await fs.emptyDir(options.workDir || 'output');
-        } catch(err){
+        } catch (err) {
             grunt.log.error(grunt.util.error(err.message, err));
             grunt.fail.warn(`Unable clean up the working directory ${options.workDir}`);
         }
@@ -120,4 +121,3 @@ module.exports = function(grunt) {
         done();
     });
 };
-
