@@ -18,7 +18,7 @@
         "dev:test": "grunt devtest"
     },
     "engine": {
-        "node": ">=8.6.0"
+        "node": ">=14.14"
     },
     "repository": {
         "type": "git",
@@ -32,7 +32,7 @@
         "@babel/core": "^7.21.4",
         "@babel/preset-env": "^7.21.4",
         "babel-preset-minify": "^0.5.2",
-        "fs-extra": "^8.1.0",
+        "fs-extra": "^11.1.1",
         "glob": "^7.2.3",
         "pretty-bytes": "^5.6.0",
         "requirejs": "^2.3.6",
