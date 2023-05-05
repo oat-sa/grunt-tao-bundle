@@ -1,6 +1,6 @@
 {
     "name": "@oat-sa/grunt-tao-bundle",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "description": "Bundle client side code in TAO extensions",
     "author": {
         "name": "Bertrand Chevrier",
