@@ -14,8 +14,12 @@
     "main": "Gruntfile.js",
     "scripts": {
         "lint": "grunt eslint",
+        "lint:report": "eslint Gruntfile.js tasks/*.js --output-file eslint_report.json --format json | true",
         "test": "grunt test",
-        "dev:test": "grunt devtest"
+        "dev:test": "grunt devtest",
+        "test:cov": "nyc mocha",
+        "coverage": "nyc report",
+        "coverage:clover": "nyc report --reporter=clover"
     },
     "engine": {
         "node": ">=14.14"
@@ -51,6 +55,7 @@
         "grunt-mocha-test": "^0.13.3",
         "mocha": "^10.2.0",
         "mock-require": "^3.0.3",
+        "nyc": "^15.1.0",
         "prettier": "^2.8.8"
     },
     "prettier": "@oat-sa/prettier-config",
