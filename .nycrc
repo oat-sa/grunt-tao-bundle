@@ -1,0 +1,5 @@
+{
+    "all": true,
+    "include": ["test/*_spec.js"],
+    "exclude": []
+}
