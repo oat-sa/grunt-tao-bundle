@@ -5,6 +5,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
 # Runtime data
 pids
 *.pid
@@ -44,6 +56,7 @@ typings/
 
 # Optional eslint cache
 .eslintcache
+eslint_report.json
 
 # Optional REPL history
 .node_repl_history
