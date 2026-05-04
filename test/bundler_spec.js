@@ -345,7 +345,7 @@ describe('bundler', () => {
         expect(results[2].title).to.be.equal('extG/loader/extensionExcludeShallow.bundle.js');
         expect(results[3].title).to.be.equal('extG/loader/controllerA.bundle.js');
         expect(results[4].title).to.be.equal('extG/loader/controllerAExcludeNested.bundle.js');
-        
+
         expect(results[0].content).to.be.deep.equal([
             path.resolve('./test/data/packages/main.js'),
             'extG/component/a.js',
@@ -375,5 +375,43 @@ describe('bundler', () => {
         expect(results[4].content).to.be.deep.equal([
             'extG/controller/a.js',
         ], 'Bundle for controller A must exclude all nested dependencies');
+    });
+
+    it('should pre-transform modern syntax using babel (which rjs alone cannot)', async () => {
+        const results = await bundler( {
+            ...options,
+            extension : 'extH',
+            babelPreTransform: { enabled: true },
+            bundles : [{
+                name : 'extH',
+                default: true
+            }]
+        });
+
+        expect(results).to.be.an('array');
+        expect(results.length).to.be.equal(1);
+        expect(results[0].title).to.be.equal('extH/loader/extH.bundle.js');
+        expect(results[0].content).to.be.deep.equal([
+            'extH/controller/modernSyntax.js',
+        ]);
+    });
+
+    it('should throw on modern syntax if babel pre-transform skipped', async () => {
+        try {
+            await bundler( {
+                ...options,
+                extension : 'extH',
+                babelPreTransform: { enabled: false },
+                bundles : [{
+                    name : 'extH',
+                    default: true
+                }]
+            });
+            expect(false, 'Bundler should have thrown already!').to.be.true;
+        }
+        catch (e) {
+            expect(e).to.be.an.instanceof(Error);
+            expect(e.message).to.match(/Parse error using esprima/);
+        }
     });
 });
