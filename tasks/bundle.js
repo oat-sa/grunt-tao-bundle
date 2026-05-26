@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2018-2019 (original work) Open Assessment Technlogies SA
+ * Copyright (c) 2018-2026 (original work) Open Assessment Technlogies SA
  *
  */
 
@@ -49,6 +49,9 @@ module.exports = function (grunt) {
          * @param {bundle[]} bundles - the configuration per bundle
          * @param {String[]} dependencies - the list of the dependencies (code from dependencies is excluded)
          * @param {String[]} [allowExternal] - the list of modules allowed to be included, mostly for internal aliases
+         * @param {Object} [babelPreTransform] - if given, the options for the Babel pre-transform of the sources before bundling
+         * @param {Boolean} [babelPreTransform.enabled = false] - if true, the sources are pre-transformed with Babel before bundling
+         * @param {String[]} [babelPreTransform.exclude = []] - list of module names to exclude from the Babel pre-transform
          */
 
         /**
@@ -74,7 +77,8 @@ module.exports = function (grunt) {
         const options = this.options();
 
         try {
-            grunt.log.subhead('Start bundling');
+            const startMessage = options.babelPreTransform?.enabled ? 'Start bundling with pre-transform' : 'Start bundling';
+            grunt.log.subhead(startMessage);
 
             const results = await bundler(options);
 

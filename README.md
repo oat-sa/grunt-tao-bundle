@@ -11,6 +11,7 @@ In order to create bundles that doesn't impact the extension dependency model, w
 This task produce bundles sandboxed to a given extension.
 
 The task is made of 2 steps :
+
 1. The bundling, based on the configuration, we aggregate the assets of the extension, into a single file. Since the TAO client source code is managed using AMD modules and use some [requirejs](https://requirejs.org) internals, we use the [r.js](https://requirejs.org/docs/optimization.html) optimizer to parse the dependency tree and bundle the assets. We don't use it to minimify the resources.
 2. The transform step is used to either transpile the code, using [Babel 7](https://babeljs.io/) (still experimental) or [UglifyJs](http://lisperator.net/uglifyjs/) to compress and minimify it.
 
@@ -18,7 +19,7 @@ The task is made of 2 steps :
 
 ## Getting Started
 
-This plugin requires [node.js >= 8.6.0](https://nodejs.org/en/download/) and to be installed along with  [Grunt](http://gruntjs.com/).
+This plugin requires [node.js >= 18.0.0](https://nodejs.org/en/download/) and to be installed along with [Grunt](http://gruntjs.com/).
 To add install it :
 
 ```shell
@@ -28,6 +29,7 @@ npm install @oat-sa/grunt-tao-bundle --save-dev
 ## The "tao-bundle" task
 
 ### Overview
+
 In your project's Gruntfile, add a section named `bundle` to the data object passed into `grunt.initConfig()` or `grunt.config.merge()`.
 
 ```js
@@ -54,45 +56,49 @@ grunt.initConfig({
 
 ## Options
 
-| Option                 | Type              | Description                                                                                                                                                                                  | Scope | Example value                                                                                             |
-|------------------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------|
-| `amd`                  | `Object`          | The AMD/requirejs configuration                                                                                                                                                              |  All extensions, all bundles |                                                                                                           |
-| `amd.baseUrl`          | `String`          | Relative path to resolve the AMD modules                                                                                                                                                     | All extensions, all bundles | `../js`                                                                                                   |
-| `amd.paths`            | `Object`          | The list of AMD paths/alias                                                                                                                                                                  | All extensions, all bundles |                                                                                                           |
-| `amd.shim`             | `Object`          | the AMD shim configuration                                                                                                                                                                   | All extensions, all bundle |                                                                                                           |
-| `amd.vendor`           | `String[]`        | A list of vendor modules                                                                                                                                                                     | All extensions, all bundle | `['lodash', 'core/**/*']`                                                                                 |
-| `amd.exclude`          | `String[]`        | A list of modules to always exclude                                                                                                                                                          | All extensions, all bundle | `['mathJax', 'ckeditor']`                                                                                 |
-| `amd.bootstrap`        | `String[]`        | A list of module to include to bootstrap a bundle                                                                                                                                            | All extensions, all bundle | `['loader/bootrstrap']`                                                                                   |
-| `amd.default`          | `String[]`        | A list of modules to include for _default_ bundles. It's the default pattern for TAO extension source code.                                                                                  | All extensions, all bundle | `['controller/**/*', 'component/**/*', 'provider/**/*']`                                                  |
-| `paths`                | `Object`          | Additional list of paths/alias                                                                                                                                                               | The current extension  |                                                                                                           |
-| `workDir`              | `String`          | The temporary working directory to copy the sources and generates the bundles                                                                                                                | The current extension | `output`                                                                                                  |
-| `outputDir`            | `String`          | The directory (inside the workDir) where the bundles will be generated                                                                                                                       | The current extension | `loader`                                                                                                  |
-| `extension`            | `String`          | The name of the current extension                                                                                                                                                            | The current extension | `taoQtiTest`                                                                                              |
-| `rootExtension`        | `String`          | The name of the root extension (the one with no prefix in AMD and that contains the libs and SDK)                                                                                            | All extensions | `tao`                                                                                                     |
-| `dependencies`         | `String[]`        | The list of **extension** dependencies, the code from a dependency is excluded from the bundle.                                                                                              | The current extensions | `['taoItems', 'taoTests', 'taoQtiItem']`                                                                  |
-| `allowExternal`        | `String[]`        | Allow external dependency into the bundle. It's not a good practice, but this can be used for aliases. Allow them to be included without the bundler to warn you about forbidden dependency. | The current extensions | `['qtiInfoControlContext']`                                                                               |
-| `getExtensionPath`     | `Function`        | A function that resolves the path to the JS files from an extension                                                                                                                          | All extensions | `extension => root + '/' + extension + '/views/js' `                                                      |
-| `getExtensionCssPath`  | `Function`        | A function that resolves the path to the CSS files from an extension                                                                                                                         | All extensions | `extension => root + '/' + extension + '/views/css' `                                                     |
-| `bundles`              | `Object[]`        | The bundles configuration                                                                                                                                                                    | The current extensions |                                                                                                           |
-| `bundle.name`          | `String`          | The bundle name without the file extension                                                                                                                                                   | The current bundle | `vendor` or `taoQtiTest`                                                                                  |
-| `bundle.vendor`        | `Boolean`         | When `true`, the bundle will include *ONLY* the libraries from `amd.vendor` (Default : `false`)                                                                                              | The current bundle |                                                                                                           |
-| `bundle.standalone`    | `Boolean`         | When `true`, the bundle will include *ALL* dependencies so that it can be run as a standalone (Default : `false`)                                                                            | The current bundle |                                                                                                           |
-| `bundle.bootstrap`     | `Boolean`         | When `true`, the bundle will include the modules from `amd.bootstrap` (Default : `false`)                                                                                                    | The current bundle |                                                                                                           |
-| `bundle.entryPoint`    | `String`          | Define an entryPoint for the bundle. Useful to create a separate bundle for a given entryPoint                                                                                               | The current bundle | `'controller/login'`                                                                                      |
-| `bundle.default`       | `Boolean`         | When `true`, the bundle will include the modules from `amd.default` (Default : `false`)                                                                                                      | The current bundle |                                                                                                           |
-| `bundle.include`       | `String[]`        | A list of additional module to add to the bundle, especially when modules are not in the correct folder.                                                                                     | The current bundle | `['taoQtiItem/qtiCommonRenderer/**/*']`                                                                   |
-| `bundle.exclude`       | `String[]`        | A list of additional module to exclude from the bundle, but if module has nested dependencies that are part of the built file                                                                | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`                                                                        |
-| `bundle.excludeNested` | `String[]`        | A list of module to exclude from the bundle. Excludes all nested dependencies from the built file                                                                                            | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`                                                                        |
-| `bundle.dependencies`  | `String[]`        | Override the extension dependency loading : if set, loads the exact list of module                                                                                                           | The current bundle | `['taoQtiItem/loader/taoQtiItemRunner.min']`                                                              |
-| `bundle.babel`         | `Boolean`         | *Experimental* When `true`, the bundle will use Babel to transpile the code (Default : `false`)                                                                                              | The current bundle |                                                                                                           |
-| `bundle.targets`       | `Object`,`String` | *Experimental* A specific target for transpiling the code when using Babel (Default : `'extends @oat-sa/browserslist-config-tao'`)                                                           | The current bundle | `{ ie: '11' }`                                                                                            |
-| `bundle.uglify`        | `Boolean`         | When `true`, the bundle will be minimified (Default : `true`)                                                                                                                                | The current bundle |                                                                                                           |
-| `bundle.package`       | `Object[]`        | Extends [packages](https://requirejs.org/docs/api.html#packages) to the bundle (Default : `[]`)                                                                                              | The current bundle | `[{ name: 'codemirror', location: '../../../tao/views/node_modules/codemirror', main: 'lib/codemirror'}]` 
+| Option                      | Type              | Description                                                                                                                                                                                  | Scope | Example value                                                                                                          |
+|-----------------------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------|------------------------------------------------------------------------------------------------------------------------|
+| `amd`                       | `Object`          | The AMD/requirejs configuration                                                                                                                                                              |  All extensions, all bundles |                                                                                                 |
+| `amd.baseUrl`               | `String`          | Relative path to resolve the AMD modules                                                                                                                                                     | All extensions, all bundles | `../js`                                                                                          |
+| `amd.paths`                 | `Object`          | The list of AMD paths/alias                                                                                                                                                                  | All extensions, all bundles |                                                                                                  |
+| `amd.shim`                  | `Object`          | the AMD shim configuration                                                                                                                                                                   | All extensions, all bundle |                                                                                                   |
+| `amd.vendor`                | `String[]`        | A list of vendor modules                                                                                                                                                                     | All extensions, all bundle | `['lodash', 'core/**/*']`                                                                         |
+| `amd.exclude`               | `String[]`        | A list of modules to always exclude                                                                                                                                                          | All extensions, all bundle | `['mathJax', 'ckeditor']`                                                                         |
+| `amd.bootstrap`             | `String[]`        | A list of module to include to bootstrap a bundle                                                                                                                                            | All extensions, all bundle | `['loader/bootrstrap']`                                                                           |
+| `amd.default`               | `String[]`        | A list of modules to include for _default_ bundles. It's the default pattern for TAO extension source code.                                                                                  | All extensions, all bundle | `['controller/**/*', 'component/**/*', 'provider/**/*']`                                          |
+| `paths`                     | `Object`          | Additional list of paths/alias                                                                                                                                                               | The current extension  |                                                                                                       |
+| `workDir`                   | `String`          | The temporary working directory to copy the sources and generates the bundles                                                                                                                | The current extension | `output`                                                                                               |
+| `outputDir`                 | `String`          | The directory (inside the workDir) where the bundles will be generated                                                                                                                       | The current extension | `loader`                                                                                               |
+| `extension`                 | `String`          | The name of the current extension                                                                                                                                                            | The current extension | `taoQtiTest`                                                                                           |
+| `rootExtension`             | `String`          | The name of the root extension (the one with no prefix in AMD and that contains the libs and SDK)                                                                                            | All extensions | `tao`                                                                                                         |
+| `dependencies`              | `String[]`        | The list of **extension** dependencies, the code from a dependency is excluded from the bundle.                                                                                              | The current extensions | `['taoItems', 'taoTests', 'taoQtiItem']`                                                              |
+| `allowExternal`             | `String[]`        | Allow external dependency into the bundle. It's not a good practice, but this can be used for aliases. Allow them to be included without the bundler to warn you about forbidden dependency. | The current extensions | `['qtiInfoControlContext']`                                                                           |
+| `getExtensionPath`          | `Function`        | A function that resolves the path to the JS files from an extension                                                                                                                          | All extensions | `extension => root + '/' + extension + '/views/js' `                                                          |
+| `getExtensionCssPath`       | `Function`        | A function that resolves the path to the CSS files from an extension                                                                                                                         | All extensions | `extension => root + '/' + extension + '/views/css' `                                                         |
+| `babelPreTransform`         | `Object`          | If given, the options for the Babel pre-transform of the sources before bundling                                                                                                             | All extensions, all bundles | `{ enabled: true, exclude: ['mathjax'] }`                                                        |
+| `babelPreTransform.enabled` | `Boolean`         | If true, the sources are pre-transformed with Babel before bundling                                                                                                                          | All extensions, all bundles |                                                                                                  |
+| `babelPreTransform.exclude` | `String[]`        | List of module names to exclude from the Babel pre-transform                                                                                                                                 | All extensions, all bundles |                                                                                                  |
+| `bundles`                   | `Object[]`        | The bundles configuration                                                                                                                                                                    | The current extensions |                                                                                                       |
+| `bundle.name`               | `String`          | The bundle name without the file extension                                                                                                                                                   | The current bundle | `vendor` or `taoQtiTest`                                                                                  |
+| `bundle.vendor`             | `Boolean`         | When `true`, the bundle will include *ONLY* the libraries from `amd.vendor` (Default : `false`)                                                                                              | The current bundle |                                                                                                           |
+| `bundle.standalone`         | `Boolean`         | When `true`, the bundle will include *ALL* dependencies so that it can be run as a standalone (Default : `false`)                                                                            | The current bundle |                                                                                                           |
+| `bundle.bootstrap`          | `Boolean`         | When `true`, the bundle will include the modules from `amd.bootstrap` (Default : `false`)                                                                                                    | The current bundle |                                                                                                           |
+| `bundle.entryPoint`         | `String`          | Define an entryPoint for the bundle. Useful to create a separate bundle for a given entryPoint                                                                                               | The current bundle | `'controller/login'`                                                                                      |
+| `bundle.default`            | `Boolean`         | When `true`, the bundle will include the modules from `amd.default` (Default : `false`)                                                                                                      | The current bundle |                                                                                                           |
+| `bundle.include`            | `String[]`        | A list of additional module to add to the bundle, especially when modules are not in the correct folder.                                                                                     | The current bundle | `['taoQtiItem/qtiCommonRenderer/**/*']`                                                                   |
+| `bundle.exclude`            | `String[]`        | A list of additional module to exclude from the bundle, but if module has nested dependencies that are part of the built file                                                                | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`                                                                        |
+| `bundle.excludeNested`      | `String[]`        | A list of module to exclude from the bundle. Excludes all nested dependencies from the built file                                                                                            | The current bundle | `['taoQtiItem/qtiItem/test/**/*']`                                                                        |
+| `bundle.dependencies`       | `String[]`        | Override the extension dependency loading : if set, loads the exact list of module                                                                                                           | The current bundle | `['taoQtiItem/loader/taoQtiItemRunner.min']`                                                              |
+| `bundle.babel`              | `Boolean`         | *Experimental* When `true`, the bundle will use Babel to transpile the code (Default : `false`)                                                                                              | The current bundle |                                                                                                           |
+| `bundle.targets`            | `Object`,`String` | *Experimental* A specific target for transpiling the code when using Babel (Default : `'extends @oat-sa/browserslist-config-tao'`)                                                           | The current bundle | `{ ie: '11' }`                                                                                            |
+| `bundle.uglify`             | `Boolean`         | When `true`, the bundle will be minimified (Default : `true`)                                                                                                                                | The current bundle |                                                                                                           |
+| `bundle.package`            | `Object[]`        | Extends [packages](https://requirejs.org/docs/api.html#packages) to the bundle (Default : `[]`)                                                                                              | The current bundle | `[{ name: 'codemirror', location: '../../../tao/views/node_modules/codemirror', main: 'lib/codemirror'}]` |
 
 ### Examples
 
 The configuration from the `tao` extension :
-```
+
+```js
 grunt.config.merge({
     bundle : {
         //define the global options for all extensions' tasks
@@ -108,6 +114,7 @@ grunt.config.merge({
         tao : {
             options : {
                 extension : 'tao',
+                babelPreTransform: { enabled: true },
                 bundles : [{
                     //bundles sources from amd.vendor
                     name   : 'vendor',
@@ -132,7 +139,8 @@ grunt.config.merge({
 ```
 
 The configuration from the `taoQtiItem` extension :
-```
+
+```js
 grunt.config.merge({
     bundle : {
         taoqtiitem : {
@@ -145,6 +153,7 @@ grunt.config.merge({
                     'qtiCustomInteractionContext' : `${root}/taoQtiItem/views/js/runtime/qtiCustomInteractionContext`,
                     'qtiInfoControlContext' : `${root}taoQtiItem/views/js/runtime/qtiInfoControlContext`
                 },
+                babelPreTransform: { enabled: true, exclude: ['mathjax'] },
 
                 bundles : [{
                     name : 'taoQtiItem',
@@ -170,6 +179,7 @@ grunt.config.merge({
     }
 });
 ```
+
 ## Test
 
 ```sh
@@ -177,7 +187,10 @@ npm test
 ```
 
 ## Release History
- * _0.8.0_ Add options for standalone bundles and specific Babel targets 
+
+ * _1.1.0_ Add babelPreTransform option
+ * _1.0.0_ Upgrade to Node 18
+ * _0.8.0_ Add options for standalone bundles and specific Babel targets
  * _0.7.0_ Update browserslist version (remove IE11 support)
  * _0.6.1_ Enable babel updates
  * _0.6.0_ Exclude nested modules from bundle
