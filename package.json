@@ -22,7 +22,7 @@
         "coverage:clover": "nyc report --reporter=clover"
     },
     "engine": {
-        "node": ">=14.14"
+        "node": ">=18"
     },
     "repository": {
         "type": "git",
